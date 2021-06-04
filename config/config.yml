@@ -1,0 +1,33 @@
+config:
+  devmode: true
+  throttling: false
+  allowed_requests_per_second: 4
+  files_cache_path: "/var/www/html/var/cache/files/"
+  cache_type: files
+  cache_fallback: false
+  mysql:
+    host: mysql
+    driver: pdo_mysql
+    db_name: gv
+    username: root
+    password: root
+  redis:
+    host: redis
+    port: 6379
+    cluster: false
+    pool_size: 1
+    username:
+    password:
+    enabled: true
+  email:
+    host: lala.example.com
+    smtp_auth: true
+    username:
+    password:
+    smtp_secure:
+    port:
+  allowed_upload_file_types:
+    - text/csv
+    - image/png
+    - image/jpeg
+    - image/gif
