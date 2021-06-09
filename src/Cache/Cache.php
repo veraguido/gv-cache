@@ -18,13 +18,14 @@ use Gvera\Helpers\config\Config;
 class Cache
 {
     private static string $cacheFilesPath;
+    private static bool $isInitialized = false;
     private static Config $config;
 
     /**
      * it will ping redis to check the availability of the service, if it's not present it will fallback
      * to files as default. As PRedis will ping true OR exception I can only catch the exception and fallback to
      * FilesCache
-     * @return FilesCache|RedisClientCache
+     * @return CacheInterface
      * @throws Exception
      */
     public static function getCache(): CacheInterface
@@ -37,17 +38,17 @@ class Cache
         }
 
         $cacheType = self::$config->getConfigItem('cache_type');
+        self::$isInitialized = true;
 
         if ('files' === $cacheType) {
             return FilesCache::getInstance(self::$config);
         }
 
+
         //setting up files cache as a fallback in case redis client fails.
         try {
             return RedisClientCache::getInstance(self::$config);
         } catch (Exception $e) {
-
-
             if (!self::$config->getConfigItem('cache_fallback')) {
                 throw new Exception('Redis cache could not be initialized and fallback is not activated');
             }
@@ -59,5 +60,10 @@ class Cache
     public static function setConfig(Config $config)
     {
         self::$config = $config;
+    }
+
+    public static function isInitialized(): bool
+    {
+        return self::$isInitialized;
     }
 }

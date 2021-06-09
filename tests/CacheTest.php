@@ -23,10 +23,12 @@ class CacheTest extends \PHPUnit\Framework\TestCase
         $config = new \Gvera\Helpers\config\Config(__DIR__ . "/../config/config.yml");
         $config->overrideKey('files_cache_path', $this->filesCachePath);
         \Gvera\Cache\Cache::setConfig($config);
+        $this->assertFalse(\Gvera\Cache\Cache::isInitialized());
         $itemToCache = "test";
 
         $cache = \Gvera\Cache\Cache::getCache();
 
+        $this->assertTrue(\Gvera\Cache\Cache::isInitialized());
         $cache->save('testkey', $itemToCache);
         $this->assertTrue($cache->load('testkey') === "test");
         $cache->delete('testkey');
