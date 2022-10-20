@@ -64,7 +64,8 @@ class CacheItemPool implements CacheItemPoolInterface
         try {
             $client = $this->poolCacheClient->nextClient();
             $item = new CacheItem($key);
-            $item->set(unserialize($client->get($key)));
+            $rawItem = $client->get($key);
+            $rawItem ?? $item->set(unserialize($rawItem));
         } catch (Throwable $t) {
             throw new InvalidArgumentException('something went wrong retrieving a cache item', [$key]);
         }
